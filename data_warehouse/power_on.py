@@ -1,12 +1,11 @@
 import time
-#from utils import get_data,process_data,load_data
+from utils import get_data,process_stock_data,load_data
 import sqlite3
+import threading
 
 db_path="data_warehouse/database/stocks.db"
 stocks_list = ["AAPL","GOOGL","TSLA","INFY","RELIANCE"]
 power = False
-
-#{'ticker': 'AAPL', 'price': np.float64(179.77), 'volume': 694, 'buy_pressure': 0.53, 'timestamp': '2025-08-13T14:54:51.607020'}
 
 def warehouse_power_on():
     """
@@ -21,7 +20,7 @@ def warehouse_power_on():
     
     # Start data ingestion services
     power = True
-    #start_data_ingestion_services()
+    threading.Thread(target=start_data_ingestion_services(power), daemon=True).start()
 
 def warehouse_power_off():
     """
@@ -31,14 +30,15 @@ def warehouse_power_off():
     global power
     power = False
 
-#def start_data_ingestion_services(power):
-#    """
-#    Function to fetch data, process it and load into DB.
-#    """
-#    while power:
-#        data = get_data()
-#        load_data(process_data(data))
-#        time.sleep(5)
+def start_data_ingestion_services(power):
+    """
+    Function to fetch data, process it and load into DB.
+    """
+    while power:
+        data = get_data()
+        load_data(process_stock_data(data))
+        print(f"Data Added at {time.localtime()}")
+        time.sleep(5)
 
 def initialize_database_connections():
     """
