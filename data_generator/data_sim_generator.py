@@ -55,6 +55,6 @@ def generate_all_stocks():
 
 # Example run (single tick)
 if __name__ == "__main__":
-    #for _ in range(1):
-    while True:
+    for _ in range(1):
+    #while True:
         print(generate_all_stocks())
